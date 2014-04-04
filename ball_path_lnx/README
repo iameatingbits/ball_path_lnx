@@ -1,0 +1,27 @@
+# Author: Ivan.Starodubtsev
+# E-mail: boors2@gmail.com
+# License: NOLICENSE
+
+This is test task which was made for the Samsung R&D Ukraine as
+an task of extended interview for position of the software engineer.
+
+Attached task description paper sheet gives comprehensive information
+about the task itself.
+
+You can change/use this software or its sources without any warnings
+and restrictions from my or any other's side!
+
+FEEL FREE TO BE FREE!
+
+How to build it:
+
+	$ cd ball_path_lnx
+	$ make
+
+
+
+How to use it:
+
+	$ cd ball_path_lnx
+	$ ./ball_path <map_filename>
+

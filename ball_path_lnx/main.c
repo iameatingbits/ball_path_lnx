@@ -12,15 +12,10 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-#include "inc/proc_dmap_file.h"
-#include "inc/find_ball_path.h"
-#include "inc/free_dmap.h"
-#include "inc/debug_prnt.h"
-
-#warning "Including c source files right here"
-#include "src/proc_dmap_file.c"
-#include "src/find_ball_path.c"
-#include "src/free_dmap.c"
+#include "proc_dmap_file.h"
+#include "find_ball_path.h"
+#include "free_dmap.h"
+#include "debug_prnt.h"
 
 /*
 * GLOBAL DATA

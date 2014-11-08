@@ -12,8 +12,8 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-#include "../inc/ball_path.h"
-#include "../inc/debug_prnt.h"
+#include "ball_path.h"
+#include "debug_prnt.h"
 
 
 /*

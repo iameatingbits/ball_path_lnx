@@ -21,9 +21,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "../inc/proc_dmap_file.h"
-#include "../inc/ball_path.h"
-#include "../inc/debug_prnt.h"
+#include "proc_dmap_file.h"
+#include "ball_path.h"
+#include "debug_prnt.h"
 
 /*
  * IMPORTED GLOBAL DATA

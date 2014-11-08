@@ -354,7 +354,7 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
         #ifdef DEBUG_DMAP_PRPS
         /* debug print of the data map properties */
         print_dmap_prps_dbg (dmap_prps, dmap_info, x_tmp, y_tmp/*, dmap_info->row_num - y_tmp - 1*/);
-        printf ("reference point iteration: %d\n\r", ni);
+        printf ("reference point iteration: %ld\n\r", ni);
         #endif
         
         /* * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -472,7 +472,7 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
         }
         else
         {
-            printf ("Number of iterations: %d\n\r", ni);
+            printf ("Number of iterations: %ld\n\r", ni);
         }
     }
 
@@ -486,7 +486,7 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
         dmap_coor_seq[n_steps].total_num = ni + 1;
         dmap_coor_seq[n_steps].num = 0;
     
-        printf ("START COORDINATES INFO: <x=%d, y=%d>, step=%d\n\r",
+        printf ("START COORDINATES INFO: <x=%ld, y=%ld>, step=%ld\n\r",
                 dmap_coor_seq[n_steps].x_coor,
                 dmap_coor_seq[n_steps].y_coor,
                 dmap_coor_seq[n_steps].num);
@@ -497,7 +497,7 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
         dmap_coor_seq[ni].y_coor = /*dmap_info->row_num - */dmap_info->final_point.y/* - 1*//*y_tmp*/;
         dmap_coor_seq[ni].total_num = ni + 1;
     
-        printf ("DESTINATION COORDINATES INFO: <x=%d, y=%d>, step=%d\n\r",
+        printf ("DESTINATION COORDINATES INFO: <x=%ld, y=%ld>, step=%ld\n\r",
                 dmap_coor_seq[ni].x_coor,
                 dmap_coor_seq[ni].y_coor,
                 dmap_coor_seq[ni].total_num);

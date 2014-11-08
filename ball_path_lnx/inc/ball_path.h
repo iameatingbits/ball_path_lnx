@@ -19,7 +19,7 @@
 #define DEBUG_DMAP
 #undef DEBUG_DMAP_DATA
 #undef DEBUG_DMAP_STEPS
-#undef DEBUG_DMAP_PRPS
+//#define DEBUG_DMAP_PRPS
 #undef DEBUG_INPUT
 #define DEBUG_ALT
 #undef DEBUG_COOR_SEQ

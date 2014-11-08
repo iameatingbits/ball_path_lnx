@@ -16,7 +16,10 @@ FEEL FREE TO BE FREE!
 How to build it:
 
 	$ cd ball_path_lnx
-	$ make
+	$ make app
+
+
+
 
 
 

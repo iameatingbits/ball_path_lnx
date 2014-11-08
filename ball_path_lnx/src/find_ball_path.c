@@ -321,8 +321,8 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
 {
     long ni = 0;/* number of current iteration */
     long nk = MAX_ITERS(dmap_info->col_num, dmap_info->row_num);/* total max number of iterations - 
-																increased to absolute maximum which 
-																is multiplication of rows and columns */
+                                                                increased to absolute maximum which 
+                                                                is multiplication of rows and columns */
     long n_steps = 0;
     long row_cnt = 0;
     long col_cnt = 0;
@@ -332,9 +332,9 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
     long wall = WALL_VALUE(dmap_info->col_num, dmap_info->row_num);
     long path = PATH_VALUE(dmap_info->col_num, dmap_info->row_num);
     BOOL search_on = TRUE;
-	BOOL backwrd_point_found = FALSE;
-	long next_cmp = 0;
-	BOOL path_found = FALSE;
+    BOOL backwrd_point_found = FALSE;
+    long next_cmp = 0;
+    BOOL path_found = FALSE;
 
     DMAP_COOR_SEQ *dmap_coor_seq = NULL;
     dmap_coor_seq = (DMAP_COOR_SEQ *)malloc ((nk + 1) * sizeof (DMAP_COOR_SEQ));
@@ -354,19 +354,23 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
         #ifdef DEBUG_DMAP_PRPS
         /* debug print of the data map properties */
         print_dmap_prps_dbg (dmap_prps, dmap_info, x_tmp, y_tmp/*, dmap_info->row_num - y_tmp - 1*/);
+        printf ("reference point iteration: %d\n\r", ni);
         #endif
         
         /* * * * * * * * * * * * * * * * * * * * * * * * * *
          * BUILDING A WAVE !!! & looking for the DSTN point
          * * * * * * * * * * * * * * * * * * * * * * * * * */
-        for (row_cnt = dmap_info->row_num - 1; (row_cnt > 0) && (FALSE != search_on); row_cnt --)
+        for (row_cnt = 0; (row_cnt < dmap_info->col_num) && (FALSE != search_on); row_cnt ++)
         {
-            for (col_cnt = 0; (col_cnt < dmap_info->col_num) && (FALSE != search_on); col_cnt ++)
+            for (col_cnt = 0; (col_cnt < dmap_info->col_num)/* && (FALSE != search_on)*/; col_cnt ++)
             {
+                //printf ("dmap_prps->xy_prps[%d][%d] = %d\n\r", row_cnt, col_cnt, dmap_prps->xy_prps[row_cnt][col_cnt]);
+
+                //searching for reference point on each iteration
                 if (ni == dmap_prps->xy_prps[row_cnt][col_cnt])
                 {
                     /* LEFT: checking boundaries */
-                    if ((col_cnt - 1 >= 0) && (FALSE != search_on))
+                    if ((col_cnt - 1 >= 0)/* && (FALSE != search_on)*/)
                     {
                         if ((wall != dmap_prps->xy_prps[row_cnt][col_cnt - 1]) \
                             && (path == dmap_prps->xy_prps[row_cnt][col_cnt - 1]))
@@ -374,19 +378,21 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
                             dmap_prps->xy_prps[row_cnt][col_cnt - 1] = ni + 1;
                         }
 
-						/* Looking for the DSTN point at the LEFT */
-						if (dmap_prps->xy_prps[row_cnt][col_cnt - 1] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
-						{
-							printf ("FOUND: destination point is reached!!!\n\r");
-							//printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt][col_cnt - 1]);
-							search_on = FALSE;
-							path_found = TRUE;
-						}
+                        /* Looking for the DSTN point at the LEFT */
+                        if (dmap_prps->xy_prps[row_cnt][col_cnt - 1] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
+                        {
+                            printf ("FOUND: destination point is reached!!!\n\r");
+                            //printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt][col_cnt - 1]);
+                            search_on = FALSE;
+                            path_found = TRUE;
+
+                            break;
+                        }
                     }
 
                     /* !!! NEED TO CONVERT */
                     /* DOWN: checking boundaries */
-                    if ((row_cnt - 1 >= 0) && (FALSE != search_on))
+                    if ((row_cnt - 1 >= 0)/* && (FALSE != search_on)*/)
                     {
                         if ((wall != dmap_prps->xy_prps[row_cnt - 1][col_cnt]) \
                             && (path == dmap_prps->xy_prps[row_cnt - 1][col_cnt]))
@@ -394,14 +400,16 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
                             dmap_prps->xy_prps[row_cnt - 1][col_cnt] = ni + 1;
                         }
 
-						/* Looking for the DSTN point BELOW */
-						if (dmap_prps->xy_prps[row_cnt - 1][col_cnt] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
-						{
-							printf ("FOUND: destination point is reached!!!\n\r");
-							//printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt - 1][col_cnt]);
-							search_on = FALSE;
-							path_found = TRUE;
-						}
+                        /* Looking for the DSTN point BELOW */
+                        if (dmap_prps->xy_prps[row_cnt - 1][col_cnt] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
+                        {
+                            printf ("FOUND: destination point is reached!!!\n\r");
+                            //printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt - 1][col_cnt]);
+                            search_on = FALSE;
+                            path_found = TRUE;
+
+                            break;
+                        }
                     }
 
                     /* RIGHT: checking boundaries */
@@ -413,14 +421,16 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
                             dmap_prps->xy_prps[row_cnt][col_cnt + 1] = ni + 1;
                         }
 
-						/* Looking for the DSTN point at the RIGHT */
-						if (dmap_prps->xy_prps[row_cnt][col_cnt + 1] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
-						{
-							printf ("FOUND: destination point is reached!!!\n\r");
-							//printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt][col_cnt + 1]);
-							search_on = FALSE;
-							path_found = TRUE;
-						}
+                        /* Looking for the DSTN point at the RIGHT */
+                        if (dmap_prps->xy_prps[row_cnt][col_cnt + 1] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
+                        {
+                            printf ("FOUND: destination point is reached!!!\n\r");
+                            //printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt][col_cnt + 1]);
+                            search_on = FALSE;
+                            path_found = TRUE;
+
+                            break;
+                        }
                     }
 
                     /* !!! NO NEED TO CONVERT */
@@ -433,104 +443,107 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
                             dmap_prps->xy_prps[row_cnt + 1][col_cnt] = ni + 1;
                         }
 
-						/* Looking for the DSTN point ABOVE */
-						if (dmap_prps->xy_prps[row_cnt + 1][col_cnt] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
-						{
-							printf ("FOUND: destination point is reached!!!\n\r");
-							//printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt + 1][col_cnt]);
-							search_on = FALSE;
-							path_found = TRUE;
-						}
+                        /* Looking for the DSTN point ABOVE */
+                        if (dmap_prps->xy_prps[row_cnt + 1][col_cnt] == STRT_VALUE(dmap_info->col_num, dmap_info->row_num))
+                        {
+                            printf ("FOUND: destination point is reached!!!\n\r");
+                            //printf ("VALUE: %d\n\r", dmap_prps->xy_prps[row_cnt + 1][col_cnt]);
+                            search_on = FALSE;
+                            path_found = TRUE;
+
+                            break;
+                        }
                     }
                 }
             }
         }
 
-		if (FALSE != search_on)
-		{
-			ni ++;
+        if (FALSE != search_on)
+        {
+            ni ++;
 
-			if (ni >= nk)
-			{
-				search_on = FALSE;
-				/* NO path is found */
-				path_found = FALSE;
-				printf ("NO PATH IS FOUND!!!\n\r");
-			}
-		}
-		else
-		{
-			printf ("Number of iterations: %d\n\r", ni);
-		}
+            if (ni >= nk)
+            {
+                search_on = FALSE;
+                /* NO path is found */
+                path_found = FALSE;
+                printf ("NO PATH IS FOUND!!!\n\r");
+            }
+        }
+        else
+        {
+            printf ("Number of iterations: %d\n\r", ni);
+        }
     }
 
-
-	if (FALSE != path_found)
-	{
-		search_on = TRUE;
+    if (FALSE != path_found)
+    {
+        search_on = TRUE;
     
-		/* Init the sequence of search path coordinates */
-		dmap_coor_seq[n_steps].x_coor = dmap_info->initial_point.x/*x_tmp*/;
-		dmap_coor_seq[n_steps].y_coor = /*dmap_info->row_num - */dmap_info->initial_point.y/* - 1*//*y_tmp*/;
-		dmap_coor_seq[n_steps].total_num = ni + 1;
-		dmap_coor_seq[n_steps].num = 0;
-	
-		printf ("START COORDINATES INFO: <x=%d, y=%d>, step=%d\n\r",
-										dmap_coor_seq[n_steps].x_coor,
-										dmap_coor_seq[n_steps].y_coor,
-										dmap_coor_seq[n_steps].num);
+        /* Init the sequence of search path coordinates */
+        dmap_coor_seq[n_steps].x_coor = dmap_info->initial_point.x/*x_tmp*/;
+        dmap_coor_seq[n_steps].y_coor = /*dmap_info->row_num - */dmap_info->initial_point.y/* - 1*//*y_tmp*/;
+        dmap_coor_seq[n_steps].total_num = ni + 1;
+        dmap_coor_seq[n_steps].num = 0;
+    
+        printf ("START COORDINATES INFO: <x=%d, y=%d>, step=%d\n\r",
+                dmap_coor_seq[n_steps].x_coor,
+                dmap_coor_seq[n_steps].y_coor,
+                dmap_coor_seq[n_steps].num);
 
 
 
-		dmap_coor_seq[ni].x_coor = dmap_info->final_point.x/*x_tmp*/;
-		dmap_coor_seq[ni].y_coor = /*dmap_info->row_num - */dmap_info->final_point.y/* - 1*//*y_tmp*/;
-		dmap_coor_seq[ni].total_num = ni + 1;
-	
-		printf ("DESTINATION COORDINATES INFO: <x=%d, y=%d>, step=%d\n\r",
-										dmap_coor_seq[ni].x_coor,
-										dmap_coor_seq[ni].y_coor,
-										dmap_coor_seq[ni].total_num);
+        dmap_coor_seq[ni].x_coor = dmap_info->final_point.x/*x_tmp*/;
+        dmap_coor_seq[ni].y_coor = /*dmap_info->row_num - */dmap_info->final_point.y/* - 1*//*y_tmp*/;
+        dmap_coor_seq[ni].total_num = ni + 1;
+    
+        printf ("DESTINATION COORDINATES INFO: <x=%d, y=%d>, step=%d\n\r",
+                dmap_coor_seq[ni].x_coor,
+                dmap_coor_seq[ni].y_coor,
+                dmap_coor_seq[ni].total_num);
 
-		/*
-		 * dmap_coor_seq - the container which will hold all the coordinates,
-		 * total number of steps (iterations) and character of the search direction
-		 */
+        /*
+         * dmap_coor_seq - the container which will hold all the coordinates,
+         * total number of steps (iterations) and character of the search direction
+         */
 
-		tmp_cmp = STRT_VALUE(dmap_info->col_num, dmap_info->row_num);//assigning STRT value
+        tmp_cmp = STRT_VALUE(dmap_info->col_num, dmap_info->row_num);//assigning STRT value
 
-		/* Looking for the coordinates of the DSTN point to start searching path backwards */
-		for (row_cnt = 0; (row_cnt < dmap_info->row_num) && (FALSE == backwrd_point_found); row_cnt ++)
-		{
-			for (col_cnt = 0; (col_cnt < dmap_info->col_num) && (FALSE == backwrd_point_found); col_cnt ++)
-			{
-				//looking for the current number in the cell
-				if (tmp_cmp == dmap_prps->xy_prps[row_cnt][col_cnt])
-				{
-					/* do this once - the DSTN point is begginning of backward search */
-					if ((FALSE == backwrd_point_found) && \
-						(tmp_cmp == dmap_prps->xy_prps[row_cnt][col_cnt]))
-					{
-						x_tmp = col_cnt;
-						y_tmp = row_cnt;//do we need to convert Y coordinate?
+        /* Looking for the coordinates of the DSTN point to start searching path backwards */
+        for (row_cnt = 0; (row_cnt < dmap_info->row_num) && (FALSE == backwrd_point_found); row_cnt ++)
+        {
+            for (col_cnt = 0; (col_cnt < dmap_info->col_num)/* && (FALSE == backwrd_point_found)*/; col_cnt ++)
+            {
+                //looking for the current number in the cell
+                if (tmp_cmp == dmap_prps->xy_prps[row_cnt][col_cnt])
+                {
+                    /* do this once - the DSTN point is begginning of backward search */
+                             if ((FALSE == backwrd_point_found) && \
+                        (tmp_cmp == dmap_prps->xy_prps[row_cnt][col_cnt]))
+                    {
+                        x_tmp = col_cnt;
+                        y_tmp = row_cnt;//do we need to convert Y coordinate?
 
-						tmp_cmp = dmap_coor_seq[0].total_num - 1;
+                        tmp_cmp = dmap_coor_seq[0].total_num - 1;
 
-						next_cmp = tmp_cmp - 1;
+                        next_cmp = tmp_cmp - 1;
 
-						n_steps = 0;
+                        n_steps = 0;
 
-						dmap_coor_seq[n_steps].x_coor = x_tmp;
-						dmap_coor_seq[n_steps].y_coor = y_tmp;
-						dmap_coor_seq[n_steps].srch_ch = DESTN_CELL_MOD;
-						dmap_coor_seq[n_steps].num = n_steps;
+                        dmap_coor_seq[n_steps].x_coor = x_tmp;
+                        dmap_coor_seq[n_steps].y_coor = y_tmp;
+                        dmap_coor_seq[n_steps].srch_ch = DESTN_CELL_MOD;
+                        dmap_coor_seq[n_steps].num = n_steps;
 
-						backwrd_point_found = TRUE;
-					}
-				}
-			}
-		}
-	}
-	
+                        backwrd_point_found = TRUE;
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
 
     /* searching coordinates by moving backward */
     while (TRUE == search_on)
@@ -542,91 +555,91 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
 
         /* DO NOT REVERT THE WAY OF LOOKING OVER THE ARRAY - MOVE FROM TOP TO BOTTOM! */
         /* searching for the shortest path and saving the current coordinates */
-		/* Looking for the path by moving backward e.g. from the END to the START */
+        /* Looking for the path by moving backward e.g. from the END to the START */
 
         /* DOWN: looking around for the bigger value */
-		if (y_tmp + 1 < dmap_info->row_num)
-		{
-			if (tmp_cmp == dmap_prps->xy_prps[y_tmp + 1][x_tmp])
-			{
-				tmp_cmp = dmap_prps->xy_prps[y_tmp + 1][x_tmp];
-				next_cmp = tmp_cmp - 1;
-				tmp_cmp = next_cmp;
+        if (y_tmp + 1 < dmap_info->row_num)
+        {
+            if (tmp_cmp == dmap_prps->xy_prps[y_tmp + 1][x_tmp])
+            {
+                tmp_cmp = dmap_prps->xy_prps[y_tmp + 1][x_tmp];
+                next_cmp = tmp_cmp - 1;
+                tmp_cmp = next_cmp;
 
-				/* counting steps */
-				n_steps ++;
+                /* counting steps */
+                n_steps ++;
 
-				/* saving coordinates */
-				dmap_coor_seq[n_steps].x_coor = x_tmp;
-				dmap_coor_seq[n_steps].y_coor = (y_tmp += 1);//convert the Y coordinate here!
-				dmap_coor_seq[n_steps].num = n_steps;
-				dmap_coor_seq[n_steps].srch_ch = UP_DIRECT_SYM;
-			}
-		}
+                /* saving coordinates */
+                dmap_coor_seq[n_steps].x_coor = x_tmp;
+                dmap_coor_seq[n_steps].y_coor = (y_tmp += 1);//convert the Y coordinate here!
+                dmap_coor_seq[n_steps].num = n_steps;
+                dmap_coor_seq[n_steps].srch_ch = UP_DIRECT_SYM;
+            }
+        }
 
         /* RIGHT: looking around for the bigger value */
-		if (x_tmp + 1 < dmap_info->col_num)
-		{
-			if (tmp_cmp == dmap_prps->xy_prps[y_tmp][x_tmp + 1])
-			{
-				tmp_cmp = dmap_prps->xy_prps[y_tmp][x_tmp + 1];
-				next_cmp = tmp_cmp - 1;
-				tmp_cmp = next_cmp;
+        if (x_tmp + 1 < dmap_info->col_num)
+        {
+            if (tmp_cmp == dmap_prps->xy_prps[y_tmp][x_tmp + 1])
+            {
+                tmp_cmp = dmap_prps->xy_prps[y_tmp][x_tmp + 1];
+                next_cmp = tmp_cmp - 1;
+                tmp_cmp = next_cmp;
 
-				/* counting steps */
-				n_steps ++;
+                /* counting steps */
+                n_steps ++;
 
-				/* saving coordinates */
-				dmap_coor_seq[n_steps].x_coor = (x_tmp += 1);
-				dmap_coor_seq[n_steps].y_coor = y_tmp;
-				dmap_coor_seq[n_steps].num = n_steps;
-				dmap_coor_seq[n_steps].srch_ch = LF_DIRECT_SYM;
-			}
-		}
+                /* saving coordinates */
+                dmap_coor_seq[n_steps].x_coor = (x_tmp += 1);
+                dmap_coor_seq[n_steps].y_coor = y_tmp;
+                dmap_coor_seq[n_steps].num = n_steps;
+                dmap_coor_seq[n_steps].srch_ch = LF_DIRECT_SYM;
+            }
+        }
 
         /* UP: checking boundaries */
-		if (y_tmp > 0)
-		{
-			if (tmp_cmp == dmap_prps->xy_prps[y_tmp - 1][x_tmp])
-			{
-				tmp_cmp = dmap_prps->xy_prps[y_tmp - 1][x_tmp];
-				next_cmp = tmp_cmp - 1;
-				tmp_cmp = next_cmp;
+        if (y_tmp > 0)
+        {
+            if (tmp_cmp == dmap_prps->xy_prps[y_tmp - 1][x_tmp])
+            {
+                tmp_cmp = dmap_prps->xy_prps[y_tmp - 1][x_tmp];
+                next_cmp = tmp_cmp - 1;
+                tmp_cmp = next_cmp;
 
-				/* counting steps */
-				n_steps ++;
+                /* counting steps */
+                n_steps ++;
                             
-				/* saving coordinates */
-				dmap_coor_seq[n_steps].x_coor = x_tmp;
-				dmap_coor_seq[n_steps].y_coor = (y_tmp -= 1);
-				dmap_coor_seq[n_steps].num = n_steps;
-				dmap_coor_seq[n_steps].srch_ch = DW_DIRECT_SYM;
-			}
-		}
+                /* saving coordinates */
+                dmap_coor_seq[n_steps].x_coor = x_tmp;
+                dmap_coor_seq[n_steps].y_coor = (y_tmp -= 1);
+                dmap_coor_seq[n_steps].num = n_steps;
+                dmap_coor_seq[n_steps].srch_ch = DW_DIRECT_SYM;
+            }
+        }
 
         /* LEFT: checking boundaries */
-		if (x_tmp > 0)
-		{
-			if (tmp_cmp == dmap_prps->xy_prps[y_tmp][x_tmp - 1])
-			{
-				tmp_cmp = dmap_prps->xy_prps[y_tmp][x_tmp - 1];
-				next_cmp = tmp_cmp - 1;
-				tmp_cmp = next_cmp;
+        if (x_tmp > 0)
+        {
+            if (tmp_cmp == dmap_prps->xy_prps[y_tmp][x_tmp - 1])
+            {
+                tmp_cmp = dmap_prps->xy_prps[y_tmp][x_tmp - 1];
+                next_cmp = tmp_cmp - 1;
+                tmp_cmp = next_cmp;
 
-				/* counting steps */
-				n_steps ++;
+                /* counting steps */
+                n_steps ++;
                             
-				/* saving coordinates */
-				dmap_coor_seq[n_steps].x_coor = (x_tmp -= 1);
-				dmap_coor_seq[n_steps].y_coor = y_tmp;
-				dmap_coor_seq[n_steps].num = n_steps;
-				dmap_coor_seq[n_steps].srch_ch = RT_DIRECT_SYM;
-			}
-		}
+                /* saving coordinates */
+                dmap_coor_seq[n_steps].x_coor = (x_tmp -= 1);
+                dmap_coor_seq[n_steps].y_coor = y_tmp;
+                dmap_coor_seq[n_steps].num = n_steps;
+                dmap_coor_seq[n_steps].srch_ch = RT_DIRECT_SYM;
+            }
+        }
 
         ni ++;
 
-		if (DSTN_VALUE(0,0) == dmap_prps->xy_prps[y_tmp][x_tmp])
+        if (DSTN_VALUE(0,0) == dmap_prps->xy_prps[y_tmp][x_tmp])
         {
             printf ("\nstop coordinates searching - SUCCEED to find the valid!!!\n\n");
             search_on = FALSE;
@@ -640,11 +653,11 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
         }
     }
 
-	if (FALSE != path_found)
-	{
-		(void)_dmap_prnt_path_seq (dmap_coor_seq);
-		(void)_dmap_cnvrt_path (dmap_info, dmap_coor_seq);
-	}
+    if (FALSE != path_found)
+    {
+        (void)_dmap_prnt_path_seq (dmap_coor_seq);
+        (void)_dmap_cnvrt_path (dmap_info, dmap_coor_seq);
+    }
 
     /* TODO: free DMAP_COOR_SEQ and DMAP_NUM_SEQ memory */
     free (dmap_coor_seq);
@@ -786,59 +799,59 @@ static STATUS _dmap_prps_dstry (DMAP_PRPS *dmap_prps, DMAP_INFO *dmap_info)
 
 static STATUS _dmap_prnt_path_seq (DMAP_COOR_SEQ *dmap_coor_seq/*, long n_steps*/)
 {
-	//(void)dmap_coor_seq;
+    //(void)dmap_coor_seq;
 
-	if (NULL == dmap_coor_seq/* || 0 == n_steps*/)
-	{
-		return FAIL;
-	}
-
-	long n_steps = dmap_coor_seq[0].total_num;
-
-	#ifdef DEBUG_COOR_SEQ
-    printf ("\n\nthe way coordinates sequence is:\n\n");
-	for (int cnt = 0; cnt < n_steps; cnt ++)
+    if (NULL == dmap_coor_seq/* || 0 == n_steps*/)
     {
-        printf ("STEP=%ld X=%ld Y=%ld\n",
-				cnt,
-				dmap_coor_seq[n_steps - cnt].x_coor,
-				dmap_coor_seq[n_steps - cnt].y_coor);
+        return FAIL;
     }
-	#endif
 
-	printf ("\nPATH: s -> ");
+    long n_steps = dmap_coor_seq[0].total_num;
+
+    #ifdef DEBUG_COOR_SEQ
+    printf ("\n\nthe way coordinates sequence is:\n\n");
     for (int cnt = 0; cnt < n_steps; cnt ++)
     {
-		printf ("%c -> ", dmap_coor_seq[n_steps - cnt].srch_ch);
+        printf ("STEP=%ld X=%ld Y=%ld\n",
+                cnt,
+                dmap_coor_seq[n_steps - cnt].x_coor,
+                dmap_coor_seq[n_steps - cnt].y_coor);
     }
-	printf ("d\n\n");
+    #endif
 
-	return OK;
+    printf ("\nPATH: s -> ");
+    for (int cnt = 0; cnt < n_steps; cnt ++)
+    {
+        printf ("%c -> ", dmap_coor_seq[n_steps - cnt].srch_ch);
+    }
+    printf ("d\n\n");
+
+    return OK;
 }
 
 STATUS _dmap_cnvrt_path (DMAP_INFO *dmap_info, DMAP_COOR_SEQ *dmap_coor_seq)
 {
-	if (NULL == dmap_info || NULL == dmap_coor_seq)
-	{
-		return FAIL;
-	}
+    if (NULL == dmap_info || NULL == dmap_coor_seq)
+    {
+        return FAIL;
+    }
 
-	long n_steps = dmap_coor_seq[0].total_num;
-	
-	/* converting path - begin from the cnt=1 to save the 's' marked cell on the map */
-	for (int cnt = 1; cnt < n_steps; cnt ++)
-	{
-		dmap_info->dmap[dmap_coor_seq[n_steps - cnt].y_coor][dmap_coor_seq[n_steps - cnt].x_coor] \
-			= PATH_SYM;
-	}
+    long n_steps = dmap_coor_seq[0].total_num;
+    
+    /* converting path - begin from the cnt=1 to save the 's' marked cell on the map */
+    for (int cnt = 1; cnt < n_steps; cnt ++)
+    {
+        dmap_info->dmap[dmap_coor_seq[n_steps - cnt].y_coor][dmap_coor_seq[n_steps - cnt].x_coor] \
+            = PATH_SYM;
+    }
 
-	/* mark the STRT point */
-
-
-	/* mark the DSTN point */
+    /* mark the STRT point */
 
 
-	//print_bdmap_dbg (dmap_info);
+    /* mark the DSTN point */
 
-	return OK;
+
+    //print_bdmap_dbg (dmap_info);
+
+    return OK;
 }

@@ -413,7 +413,7 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
                     }
 
                     /* RIGHT: checking boundaries */
-                    if ((col_cnt + 1 < dmap_info->col_num) && (FALSE != search_on))
+                    if ((col_cnt + 1 < dmap_info->col_num)/* && (FALSE != search_on)*/)
                     {
                         if ((wall != dmap_prps->xy_prps[row_cnt][col_cnt + 1]) \
                             && (path == dmap_prps->xy_prps[row_cnt][col_cnt + 1]))
@@ -435,7 +435,7 @@ static STATUS_FIND _path_fnder_alt (DMAP_INFO *dmap_info, DMAP_PRPS *dmap_prps)
 
                     /* !!! NO NEED TO CONVERT */
                     /* UP: checking boundaries */
-                    if ((row_cnt + 1 < dmap_info->row_num) && (FALSE != search_on))
+                    if ((row_cnt + 1 < dmap_info->row_num)/* && (FALSE != search_on)*/)
                     {
                         if ((wall != dmap_prps->xy_prps[row_cnt + 1][col_cnt]) \
                             && (path == dmap_prps->xy_prps[row_cnt + 1][col_cnt]))
